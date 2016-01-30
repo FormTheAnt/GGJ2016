@@ -100,7 +100,6 @@ Container.run = function( f_dt, f_world )
 						Boxes[level].y[i] = 0
 						Boxes[level].width[i] = 0
 						Boxes[level].height[i] = 0
-						print(1)
 					end
 				end
 			end
@@ -121,6 +120,10 @@ Container.draw = function( f_world, f_camera )
 
 	for i = 1, #Boxes[level].x do
 		love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
+		love.graphics.setColor( 255, 0, 0 )
+		love.graphics.line( Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i], (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i] )
+		love.graphics.line( Boxes[level].x[i] - f_camera.x, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i], (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i],  Boxes[level].y[i] - f_camera.y)
+		love.graphics.setColor( 255, 255, 255 )
 	end
 
 	if f_world.isdebug then

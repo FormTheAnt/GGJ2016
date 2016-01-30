@@ -37,7 +37,6 @@ function love.load()
 end
 
 function love.update( f_dt )
-
 	for i = 1, #Run do
 		Run[i]( f_dt, World )
 	end
