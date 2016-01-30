@@ -58,6 +58,7 @@ Container.run = function( f_dt, f_world )
 				Boxes[level].height[#Boxes[level].height + 1] = ((love.mouse.getY() + f_world.camera.y) - Editor.mousey) * -1
 			end
 			
+			Boxes[level].type[#Boxes[level].type + 1] = BoxType
 			Editor.mousecheck = false
 		else
 			local snapalign = false
@@ -119,68 +120,81 @@ Container.draw = function( f_world, f_camera )
 	local level = f_world.currentlevel
 
 	for i = 1, #Boxes[level].x do
+		if Boxes[level].type[i] == "normal" then
 		love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
 		love.graphics.setColor( 255, 0, 0 )
 		love.graphics.line( Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i], (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i] )
 		love.graphics.line( Boxes[level].x[i] - f_camera.x, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i], (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i],  Boxes[level].y[i] - f_camera.y)
 		love.graphics.setColor( 255, 255, 255 )
+		elseif Boxes[level].type[i] == "hazard" then
+			love.graphics.setColor( 255, 55, 55 )
+			love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
+			love.graphics.setColor( 255, 255, 255 )
+		elseif Boxes[level].type[i] == "enemyspawn" then
+			love.graphics.setColor( 255, 55, 255 )
+			love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
+			love.graphics.setColor( 255, 255, 255 )
+		end
 	end
 
 	if f_world.isdebug then
-		love.graphics.print( "Write to file?: " .. tostring( WriteReady ), 15, 30 )
-		love.graphics.print( "Current block type: " .. BoxType, 15, 60 )
+		love.graphics.print( "(Press 9 to switch) Write to file?: " .. tostring( WriteReady ), 15, 30 )
+		love.graphics.print( "(Press 1-8 to switch) Current block type: " .. BoxType, 15, 60 )
+		love.graphics.print( "(Press l to switch) Debug is currently: " .. tostring( f_world.isdebug ), 15, 90 )
 	end
 end
 
 Container.close = function( f_world )
-	if WriteReady then
-		if not( love.filesystem.exists( "levels" ) ) then
-			love.filesystem.createDirectory( "levels" )
-		end
-		
-		local level = f_world.currentlevel
-		local filesystem = love.filesystem.getDirectoryItems( "levels" )
-		local saveindex = 1
-
-		for i = 1, #filesystem do
-			if love.system.getOS( ) == "Windows" then
-				if love.filesystem.exists( [[levels\level]] .. tostring( saveindex ) .. ".lua" ) then
-					saveindex = saveindex + 1
-				end
-			else
-				if love.filesystem.exists( "levels/level" .. tostring( saveindex ) .. ".lua" ) then
-					saveindex = saveindex + 1
-				end
+	if f_world.isdebug then
+		if WriteReady then
+			if not( love.filesystem.exists( "levels" ) ) then
+				love.filesystem.createDirectory( "levels" )
 			end
-		end
-
-		local contents = "Boxes[" .. tostring( saveindex ) .. "] = { "
-
-
-		for k, v in pairs( Boxes[level] ) do
-			contents = contents .. k .. " = { "
 			
-			for i = 1, #v do
-				if type( v[i] ) == "number" then
-					contents = contents .. tostring( v[i] ) .. ", "
+			local level = f_world.currentlevel
+			local filesystem = love.filesystem.getDirectoryItems( "levels" )
+			local saveindex = 1
+
+			for i = 1, #filesystem do
+				if love.system.getOS( ) == "Windows" then
+					if love.filesystem.exists( [[levels\level]] .. tostring( saveindex ) .. ".lua" ) then
+						saveindex = saveindex + 1
+					end
 				else
-					contents = contents .. "'" ..  v[i] .. "', "
+					if love.filesystem.exists( "levels/level" .. tostring( saveindex ) .. ".lua" ) then
+						saveindex = saveindex + 1
+					end
 				end
 			end
 
+			local contents = "Boxes[" .. tostring( saveindex ) .. "] = { "
+
+
+			for k, v in pairs( Boxes[level] ) do
+				contents = contents .. k .. " = { "
+				
+				for i = 1, #v do
+					if type( v[i] ) == "number" then
+						contents = contents .. tostring( v[i] ) .. ", "
+					else
+						contents = contents .. "'" ..  v[i] .. "', "
+					end
+				end
+
+				contents = string.sub(contents, 0, -3)
+				
+				contents = contents .. " }, "
+			end
+			
 			contents = string.sub(contents, 0, -3)
 			
-			contents = contents .. " }, "
-		end
-		
-		contents = string.sub(contents, 0, -3)
-		
-		contents = contents .. " }"
+			contents = contents .. " }"
 
-		if love.system.getOS( ) == "Windows" then
-			love.filesystem.write( [[levels\level]] .. tostring( saveindex ) .. ".lua", contents )
-		else
-			love.filesystem.write( "levels/level" .. tostring( saveindex ) .. ".lua", contents )
+			if love.system.getOS( ) == "Windows" then
+				love.filesystem.write( [[levels\level]] .. tostring( saveindex ) .. ".lua", contents )
+			else
+				love.filesystem.write( "levels/level" .. tostring( saveindex ) .. ".lua", contents )
+			end
 		end
 	end
 end
