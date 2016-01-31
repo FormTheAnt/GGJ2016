@@ -96,7 +96,7 @@ function love.load()
 			
 			Images[name] = function() return image end
 		else
-			if string.find( filesystem[i], "_" ) then
+			if love.filesystem.isDirectory( "images/" .. filesystem[i] ) then
 				local animationfiles = love.filesystem.getDirectoryItems( "images/" .. filesystem[i] .. "/"  )
 				local frames = {}
 

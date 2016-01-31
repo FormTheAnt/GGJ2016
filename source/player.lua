@@ -48,7 +48,7 @@ Container.run = function( f_dt, f_world, f_LOG )
 end
 
 Container.draw = function( f_world, f_camera, f_images )
-	love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, Player.y - f_camera.y, 0, 0.26  )
+	love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26  )
 	--love.graphics.rectangle( "fill", Player.x - f_camera.x, Player.y - f_camera.y, Player.width, Player.height  )
 end
 

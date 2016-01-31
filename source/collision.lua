@@ -29,6 +29,7 @@ Container.run = function( f_dt, f_world, f_LOG )
 					f_world.player.nexty = (Boxes[level].y[i] + Boxes[level].height[i]) + 0.1
 					f_world.player.collide.top = true
 					f_LOG( "player is touching box bottom side", i )
+					
 				end
 			end
 			if (player.nexty + player.height) > Boxes[level].y[i] and player.nexty < (Boxes[level].y[i] + Boxes[level].height[i]) then
