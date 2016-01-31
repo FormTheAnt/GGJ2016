@@ -73,7 +73,7 @@ function love.mousepressed( f_x, f_y, f_side )
 end
 
 function love.load()
-	local requirelist = {"player", "collision", "camera", "rituals"}
+	local requirelist = {"collision", "camera", "player", "rituals"}
 	
 	love.filesystem.setIdentity( "2016" )
 	love.window.setMode( 1200, 700, {fullscreen = false} )

@@ -1,6 +1,6 @@
 local Container = {}
 local X = {var = 0, speedlimit = 500, slowdown = 0}
-local Y = {var = 900, speedlimit = 500, slowdown = 0, jumptime = 0, jumppower = 0}
+local Y = {var = 900, speedlimit = 500, slowdown = 0, jumptime = 0, jumppower = 0, jumpstop = true}
 
 Container.main = {firstx = 8000, firsty = 8000, x = 8000, y = 8000, width = 50, height = 100, xvars = X, yvars = Y, nextx = 8000, nexty = 8000, collide = {top = false, bottom = false, left = false, right = false}}
 
@@ -45,6 +45,7 @@ Container.run = function( f_dt, f_world, f_LOG )
 		Y.jumptime = 0
 		Y.jumppower = 0
 		X.speedlimit = 530
+		Y.jumpstop = true
 
 		if love.keyboard.isDown( " " ) and not(Y.jumpgo) then
 			Y.jumpgo = love.timer.getTime()
@@ -73,7 +74,9 @@ Container.run = function( f_dt, f_world, f_LOG )
 	end
 	
 	if Y.jumpgo then
-		if love.timer.getTime() > Y.jumpgo + 0.1 then
+		Y.jumpstop = false
+		
+		if love.timer.getTime() > Y.jumpgo + 0.2 then
 			Y.jumptime = 100
 			Y.var = -570
 			Y.jumpgo = false
@@ -92,10 +95,28 @@ Container.run = function( f_dt, f_world, f_LOG )
 end
 
 Container.draw = function( f_world, f_camera, f_images )
-	if X.var >= 0 then
-		love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26 )
-	else
-		love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 189)
+	if not(Y.jumpgo)then
+		if (X.var == 0 and Y.var < 50 and Y.jumpstop) then
+			love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26 )
+		elseif (X.var ~= 0 and Y.var < 50 and Y.jumpstop)  then
+			if X.var > 0 then
+				love.graphics.draw( f_images["robot_walk"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26, 71 )
+			elseif X.var < 0 then
+				love.graphics.draw( f_images["robot_walk"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 260 )
+			end
+		else
+			if X.var >= 0 then
+				love.graphics.draw( f_images["robot_fall"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26, 11 )
+			elseif X.var < 0 then
+				love.graphics.draw( f_images["robot_fall"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 200 )
+			end
+		end
+	elseif Y.jumpgo then
+		if love.keyboard.isDown( "a" ) then
+			love.graphics.draw( f_images["robot_jump"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 260)
+		else
+			love.graphics.draw( f_images["robot_jump"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26, 71)
+		end
 	end
 	--love.graphics.rectangle( "fill", Player.x - f_camera.x, Player.y - f_camera.y, Player.width, Player.height  )
 	love.graphics.print( Y.jumptime, Player.x, Player.y )
