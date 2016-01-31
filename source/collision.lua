@@ -35,11 +35,11 @@ Container.run = function( f_dt, f_world, f_LOG )
 				if (player.x + player.width) < Boxes[level].x[i] and (player.nextx + player.width) > Boxes[level].x[i] then
 					f_world.player.nextx = (Boxes[level].x[i] - f_world.player.width) - 0.1
 					f_world.player.collide.left = true
-					f_LOG( "player is touching box right side", i )
+					f_LOG( "player is touching box left side", i )
 				elseif player.x > (Boxes[level].x[i] + Boxes[level].width[i]) and player.nextx < (Boxes[level].x[i] + Boxes[level].width[i]) then
 					f_world.player.nextx = (Boxes[level].x[i] + Boxes[level].width[i]) + 0.1
 					f_world.player.collide.right = true
-					f_LOG( "player is touching box left side", i )
+					f_LOG( "player is touching box right side", i )
 				end
 			end
 		end

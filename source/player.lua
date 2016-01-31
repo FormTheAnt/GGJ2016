@@ -2,11 +2,11 @@ local Container = {}
 local X = {var = 0, speedlimit = 500, slowdown = 0}
 local Y = {var = 0, speedlimit = 500, slowdown = 0}
 
-Container.main = {x = 90, y = 90, width = 50, height = 90, xvars = X, yvars = Y, nextx = 90, nexty = 90}
+Container.main = {x = 90, y = 90, width = 50, height = 100, xvars = X, yvars = Y, nextx = 90, nexty = 90, collide = {top = false, bottom = false, left = false, right = false}}
 
 local Player = Container.main
 
-Container.run = function( f_dt, f_world )
+Container.run = function( f_dt, f_world, f_LOG )
 	Player.x = Player.nextx
 	Player.y = Player.nexty
 
@@ -32,8 +32,12 @@ Container.run = function( f_dt, f_world )
 		end
 	end
 
-	if love.keyboard.isDown( " " ) and Player.collide.bottom then
-		Y.var = -550
+	if Player.collide.bottom then
+		if love.keyboard.isDown( " " ) then
+			Y.var = -550
+		end
+	else
+		f_LOG( "player is falling" )
 	end
 
 	Y.var = Y.var < 1400 and Y.var + (900 * f_dt) or 1400
@@ -43,8 +47,9 @@ Container.run = function( f_dt, f_world )
 	Player.collide = {bottom = false, top = false, left = false, right = false}
 end
 
-Container.draw = function( f_world, f_camera )
-	love.graphics.rectangle( "fill", Player.x - f_camera.x, Player.y - f_camera.y, Player.width, Player.height )
+Container.draw = function( f_world, f_camera, f_images )
+	love.graphics.draw( f_images["robot_idle"], Player.x - f_camera.x, Player.y - f_camera.y, 0, 0.26, 0.26  )
+	--love.graphics.rectangle( "fill", Player.x - f_camera.x, Player.y - f_camera.y, Player.width, Player.height  )
 end
 
 

@@ -2,6 +2,7 @@ local Camera = {x = 0, y = 0, width = 0, height = 0, leftmargin = 500, rightmarg
 local Run = {}
 local Draw = {}
 local Close = {}
+local Images = {}
 
 local GameLog = {}
 local GameLogFirsts = {}
@@ -19,19 +20,35 @@ local LOG = function( f_text, f_id, f_values )
 
 	for kmain, vmain in pairs(World.rituals.listeners) do
 		for i = 1, #vmain do
-			if not(vmain[i].completed) then
+			if not(vmain[i].complete) then
 				if f_values.name == vmain[i].name then
 					local stop = false
 
 					for k, v in pairs( vmain[i] ) do
-						if not( k == "completed" ) then
-							if v ~= f_values[k] then
-								stop = true
+						if not( k == "complete" ) then
+							if not( k == "mustcomplete" ) then
+								if v ~= f_values[k] then
+									stop = true
+								end
+							else
+								if type(v) == "number" then
+									if not( vmain[v].complete ) then
+										print(kmain, vmain[v].complete)
+										stop = true
+									end
+								else
+									for cyclecheck = 1, #v do
+										if not( vmain[ v[cyclecheck] ].complete ) then
+											stop = true
+										end
+									end
+								end
 							end
 						end
 					end
-
+					
 					if not(stop) then
+						print(1)
 						World.rituals.COMPLETE( kmain, i )
 					end
 				end
@@ -70,6 +87,14 @@ function love.load()
 		Draw[#Draw + 1] = file.draw
 		Close[#Close + 1] = file.close
 	end
+
+	local filesystem = love.filesystem.getDirectoryItems( "images" )
+
+	for i = 1, #filesystem do
+		local name = string.sub(filesystem[i], 0, string.find(filesystem[i], ".png") - 1)
+		
+		Images[name] = love.graphics.newImage("images/" .. filesystem[i])
+	end
 	
 	LOG( "game has started", 0 )
 end
@@ -88,7 +113,7 @@ end
 
 function love.draw()
 	for i = 1, #Draw do
-		Draw[i]( World, World.camera )
+		Draw[i]( World, World.camera, Images )
 	end
 
 	if World.isdebug then
