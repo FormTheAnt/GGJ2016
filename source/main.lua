@@ -108,7 +108,7 @@ function love.load()
 					end
 				end
 				
-				Animations[ filesystem[i] ] = {frame = 0, time = love.timer.getTime(), finished = #animationfiles, files = frames}
+				Animations[ filesystem[i] ] = {frame = 0, time = love.timer.getTime(), finished = #animationfiles - 1, files = frames}
 				
 				Images[ filesystem[i] ] = function() 
 					if love.timer.getTime() >= Animations[ filesystem[i] ].time then
