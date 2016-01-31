@@ -10,7 +10,7 @@ local BoxType = "normal"
 
 local GateWayLocks = {ids = {}, states = {}, keys = {}}
 
-Boxes[1] = { x = { 8000, 7872, 7872, 8320, 8448, 0, 0, 9536, 9664, 10240, 10368, 11328, 11072, 10752, 11072, 10944, 0, 11136, 10944, 11136, 10944, 10688, 10752 }, y = { 8128, 7936, 7872, 8128, 8832, 0, 0, 8832, 9920, 9920, 11520, 10752, 11328, 11200, 11008, 10816, 0, 10624, 10432, 10240, 10048, 9856, 11264 }, type = { 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal' }, height = { 64, 256, 64, 832, 128, 0, 0, 1216, 128, 1728, 128, 768, 64, 64, 64, 64, 0, 64, 64, 64, 64, 64, 64 }, width = { 320, 128, 448, 128, 1088, 0, 0, 128, 576, 128, 1088, 128, 192, 192, 256, 64, 0, 64, 64, 64, 64, 192, 64 } }
+Boxes[1] = { x = { 8000, 7872, 7872, 8320, 8448, 0, 0, 9536, 9664, 10240, 10368, 0, 11072, 10752, 11072, 10944, 0, 11136, 10944, 0, 10944, 10688, 10752, 8320, 0, 8640, 9664, 0, 9792, 9856, 9984, 0, 0, 0, 0, 10176, 10176, 10240, 10304, 10176, 11136, 11200, 10432, 10496, 0, 0, 0, 10688, 0, 10496, 10624, 0, 0, 11136, 11200, 0, 11264, 0, 11328, 11264, 11328, 11456, 11456, 0, 12096, 11456, 0, 11456, 11456, 11456, 11456, 11456, 11776, 12160, 11904, 11968, 12032, 12096, 0, 9984, 10368, 10560, 10048, 10240, 9984, 10368, 10240, 9984, 10560, 10560, 11008, 0, 0, 11136, 12160, 11136, 11392, 10688 }, y = { 8128, 7936, 7872, 8128, 8832, 0, 0, 8832, 9920, 9920, 11520, 0, 11328, 11200, 11008, 10816, 0, 10624, 10432, 0, 10048, 9856, 11264, 7872, 0, 7872, 7872, 0, 8384, 8512, 9664, 0, 0, 0, 0, 9344, 9472, 9472, 9472, 9664, 10688, 10624, 10944, 11136, 0, 0, 0, 10624, 0, 10688, 10880, 0, 0, 10240, 10176, 0, 10624, 0, 10688, 9344, 10304, 10624, 10304, 0, 10432, 10240, 0, 10176, 10112, 10048, 9984, 9920, 9792, 9920, 9728, 9664, 9600, 9536, 0, 9344, 9152, 9216, 9216, 9216, 8960, 9088, 8832, 8384, 8832, 8384, 8512, 0, 0, 8768, 8896, 8512, 8640, 9280 }, type = { 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal' }, height = { 64, 256, 64, 832, 128, 0, 0, 1216, 128, 1728, 128, 0, 64, 64, 64, 64, 0, 64, 64, 0, 64, 64, 64, 64, 0, 64, 640, 0, 128, 1280, 128, 0, 0, 0, 0, 128, 192, 128, 64, 64, 64, 64, 256, 64, 0, 0, 0, 320, 0, 64, 64, 0, 0, 64, 64, 0, 64, 0, 832, 960, 128, 128, 128, 0, 64, 64, 0, 64, 64, 64, 64, 64, 128, 832, 64, 64, 64, 64, 0, 320, 192, 128, 128, 128, 64, 64, 64, 128, 64, 128, 320, 0, 0, 128, 896, 256, 128, 64 }, width = { 320, 128, 448, 128, 1088, 0, 0, 128, 576, 128, 1088, 0, 192, 192, 256, 64, 0, 64, 64, 0, 64, 192, 64, 320, 0, 1024, 128, 0, 192, 128, 192, 0, 0, 0, 0, 1088, 64, 64, 64, 64, 64, 64, 64, 128, 0, 0, 0, 64, 0, 64, 64, 0, 0, 128, 64, 0, 192, 0, 128, 192, 128, 704, 448, 0, 64, 384, 0, 320, 256, 192, 128, 64, 512, 128, 256, 192, 128, 64, 0, 192, 192, 128, 64, 64, 128, 64, 320, 576, 576, 576, 128, 0, 0, 1152, 128, 256, 128, 256 } }
 
 local DIST = function( f_x1, f_y1, f_x2, f_y2 )
 	return math.sqrt( ((f_x2 - f_x1)^2) + ((f_y2 - f_y1)^2) )
@@ -117,7 +117,6 @@ Container.draw = function( f_world, f_camera, f_images )
 	local level = f_world.currentlevel
 
 	for i = 1, #Boxes[level].x do
-		if f_world.isdebug then
 			if Boxes[level].type[i] == "normal" then
 				love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
 				
@@ -127,10 +126,12 @@ Container.draw = function( f_world, f_camera, f_images )
 					end
 				end
 
-				love.graphics.setColor( 255, 0, 0 )
-				love.graphics.line( Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i], (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i] )
-				love.graphics.line( Boxes[level].x[i] - f_camera.x, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i], (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i],  Boxes[level].y[i] - f_camera.y)
-				love.graphics.setColor( 255, 255, 255 )
+				if f_world.isdebug then
+					love.graphics.setColor( 255, 0, 0 )
+					love.graphics.line( Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i], (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i] )
+					love.graphics.line( Boxes[level].x[i] - f_camera.x, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i], (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i],  Boxes[level].y[i] - f_camera.y)
+					love.graphics.setColor( 255, 255, 255 )
+				end
 			elseif Boxes[level].type[i] == "hazard" then
 				love.graphics.setColor( 255, 55, 55 )
 				love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
@@ -141,6 +142,7 @@ Container.draw = function( f_world, f_camera, f_images )
 				love.graphics.setColor( 255, 255, 255 )
 			end
 			
+		if f_world.isdebug then
 			love.graphics.setColor( 55, 55, 55 )
 			love.graphics.print( tostring(i), (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i]/2, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i]/2 )
 			love.graphics.setColor( 255, 255, 255 )

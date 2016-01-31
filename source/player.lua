@@ -2,7 +2,7 @@ local Container = {}
 local X = {var = 0, speedlimit = 500, slowdown = 0}
 local Y = {var = 900, speedlimit = 500, slowdown = 0, jumptime = 0, jumppower = 0, jumpstop = true}
 
-Container.main = {firstx = 8000, firsty = 8000, x = 8000, y = 8000, width = 50, height = 100, xvars = X, yvars = Y, nextx = 8000, nexty = 8000, collide = {top = false, bottom = false, left = false, right = false}}
+Container.main = {firstx = 8000, firsty = 8000, x = 8000, y = 8000, width = 50, height = 100, xvars = X, yvars = Y, nextx = 8000, nexty = 8000, collide = {top = false, bottom = false, left = false, right = false, jumpunlock = false}}
 
 local Player = Container.main
 
@@ -48,7 +48,15 @@ Container.run = function( f_dt, f_world, f_LOG )
 		Y.jumpstop = true
 
 		if love.keyboard.isDown( " " ) and not(Y.jumpgo) then
-			Y.jumpgo = love.timer.getTime()
+			if not (Player.jumpunlock) then
+				if f_world.rituals.listeners["is gravity still functioning?"].complete then
+					Player.jumpunlock = true
+					Y.jumpgo = love.timer.getTime()
+					f_world.rituals.currentritual = "test barrel weight limit integrity"
+				end
+			else
+				Y.jumpgo = love.timer.getTime()
+			end
 		end
 	elseif not(Player.collide.bottom) then
 		if Y.jumptime > 0 and Y.var < 0 then

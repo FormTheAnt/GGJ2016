@@ -2,11 +2,15 @@ local Container = {}
 
 local RitualList = {
 	["is gravity still functioning?"] = { [1] = {name = "player is touching box top side", first = true, complete = false},
-						[2] = {name = "player is falling", mustcomplete = 1, complete = false},
-						[3] = {name = "player is falling", mustcomplete = {1, 2}, complete = false},
-						[4] = {name = "player is falling", mustcomplete = {1, 2, 3}, complete = false},
-						[5] = {name = "player is falling", mustcomplete = {1, 2, 3, 4}, complete = false}
+						[2] = {name = "player is touching box top side", mustcomplete = 1, id = 5, complete = false},
+						[3] = {name = "player is touching box top side", mustcomplete = {1, 2}, id = 9, complete = false},
 
+		complete = false,
+		counter = 0
+	},
+	["test barrel weight limit integrity"] = { [1] = {name = "player is touching box top side", id = 99, complete = false},
+		complete = false,
+		counter = 0
 	}
 }
 local RitualCompleted = {{} --[[ritual names go here]], {} --[[indexes go here]], {} --[[Timers go here]]}
@@ -29,7 +33,9 @@ local COMPLETE = function( f_ritual, f_index )
 	RitualList[f_ritual][f_index].complete = true
 end
 
-Container.main = {popuptime = 1.5, listeners = RitualList, COMPLETE = COMPLETE}
+local CurrentRitual = "is gravity still functioning?"
+
+Container.main = {popuptime = 1.5, listeners = RitualList, COMPLETE = COMPLETE, currentritual = CurrentRitual}
 
 Container.run = function( f_dt, f_world )
 	local rituals = Container.main
@@ -54,13 +60,18 @@ Container.run = function( f_dt, f_world )
 end
 
 Container.draw = function( f_world, f_camera )
+	local ritual = Container.main
+
 	for i = 1, #RitualCompleted[1] do
 		if RitualCompleted[3][i] then
-			love.graphics.setColor( 255, 255, 255, 255 - (255 * ((love.timer.getTime() - RitualCompleted[3][i]) / f_world.rituals.popuptime)) )
-			love.graphics.print( RitualCompleted[1][i], 500, 300 )
-			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.setColor( 55, 255, 55, 255 - (200 * ((love.timer.getTime() - RitualCompleted[3][i]) / f_world.rituals.popuptime)) )
+			love.graphics.print( "test " .. RitualList[ritual.currentritual].counter .. " passed", (f_world.player.x - f_camera.x) - (string.len( "test " .. RitualList[ritual.currentritual].counter .. " passed" ) * 2), ((f_world.player.y - f_camera.y) - 20) + (i * 20) )
 		end
 	end
+
+	love.graphics.setColor( 55, 255, 55, 255)
+	love.graphics.print( "Diagnostic: " .. ritual.currentritual .. "  passed(" .. RitualList[ritual.currentritual].counter .. ")", (f_world.player.x - f_camera.x) - (string.len( "Diagnostic: " .. ritual.currentritual  .. "  passed(" .. RitualList[ritual.currentritual].counter .. ")") * 2), ((f_world.player.y - f_camera.y) - 20) )
+	love.graphics.setColor( 255, 255, 255, 255 )
 end
 
 return Container

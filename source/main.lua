@@ -17,6 +17,7 @@ local LOG = function( f_text, f_id, f_values )
 	end
 	
 	f_values.name = f_text
+	f_values.id = f_id
 	GameLog[#GameLog + 1] = {f_text, love.timer.getTime(), f_id, f_values}
 
 	for kmain, vmain in pairs(World.rituals.listeners) do
@@ -49,7 +50,12 @@ local LOG = function( f_text, f_id, f_values )
 					
 					if not(stop) then
 						World.rituals.COMPLETE( kmain, i )
+						World.rituals.listeners[kmain].counter = World.rituals.listeners[kmain].counter + 1
 					end
+				end
+			else
+				if i == #vmain and not(World.rituals.listeners.complete) then
+					World.rituals.listeners[kmain].complete = true
 				end
 			end
 		end
@@ -64,6 +70,10 @@ function love.keypressed( f_key, f_isrepeat )
 
 		love.event.push( "quit" )
 	else
+		if f_key == "l" then
+			World.isdebug = not(World.isdebug)			
+		end
+
 		World.keypress = f_key
 	end
 end
