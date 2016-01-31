@@ -33,7 +33,6 @@ local LOG = function( f_text, f_id, f_values )
 							else
 								if type(v) == "number" then
 									if not( vmain[v].complete ) then
-										print(kmain, vmain[v].complete)
 										stop = true
 									end
 								else
@@ -48,7 +47,6 @@ local LOG = function( f_text, f_id, f_values )
 					end
 					
 					if not(stop) then
-						print(1)
 						World.rituals.COMPLETE( kmain, i )
 					end
 				end

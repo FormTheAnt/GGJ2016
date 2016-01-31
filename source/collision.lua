@@ -173,7 +173,6 @@ Container.close = function( f_world )
 
 			local contents = "Boxes[" .. tostring( saveindex ) .. "] = { "
 
-
 			for k, v in pairs( Boxes[level] ) do
 				contents = contents .. k .. " = { "
 				
