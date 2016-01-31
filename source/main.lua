@@ -96,24 +96,25 @@ function love.load()
 			
 			Images[name] = function() return image end
 		else
-			local animationfiles = love.filesystem.getDirectoryItems( "images/" .. filesystem[i] .. "/"  )
-			local frames = {}
+			if string.find( filesystem[i], "_" ) then
+				local animationfiles = love.filesystem.getDirectoryItems( "images/" .. filesystem[i] .. "/"  )
+				local frames = {}
 
+				for v = 1, #animationfiles do
+					local name = string.sub( animationfiles[v], 0, string.find( animationfiles[v], ".png" ) - 1 )
 
-			for v = 1, #animationfiles do
-				local name = string.sub( animationfiles[v], 0, string.find( animationfiles[v], ".png" ) - 1 )
-
-				frames[#frames + 1] = love.graphics.newImage( "images/" .. filesystem[i] .. "/" .. animationfiles[v] )
-			end
-			
-			Animations[ filesystem[i] ] = {frame = 1, time = love.timer.getTime(), finished = #animationfiles, files = frames}
-			
-			Images[ filesystem[i] ] = function() 
-				if love.timer.getTime() >= Animations[ filesystem[i] ].time then
-					Animations[ filesystem[i] ].frame = Animations[ filesystem[i] ].frame < Animations[ filesystem[i] ].finished and Animations[ filesystem[i] ].frame + 1 or 1
+					frames[#frames + 1] = love.graphics.newImage( "images/" .. filesystem[i] .. "/" .. animationfiles[v] )
 				end
+				
+				Animations[ filesystem[i] ] = {frame = 1, time = love.timer.getTime(), finished = #animationfiles, files = frames}
+				
+				Images[ filesystem[i] ] = function() 
+					if love.timer.getTime() >= Animations[ filesystem[i] ].time then
+						Animations[ filesystem[i] ].frame = Animations[ filesystem[i] ].frame < Animations[ filesystem[i] ].finished and Animations[ filesystem[i] ].frame + 1 or 1
+					end
 
-				return Animations[ filesystem[i] ].files[Animations[ filesystem[i] ].frame]
+					return Animations[ filesystem[i] ].files[Animations[ filesystem[i] ].frame]
+				end
 			end
 		end
 	end
