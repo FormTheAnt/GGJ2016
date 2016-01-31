@@ -47,14 +47,22 @@ local LOG = function( f_text, f_id, f_values )
 							end
 						end
 					end
+
+					if World.rituals.listeners[kmain].mustcomplete then
+						if not(World.rituals.listeners[World.rituals.listeners[kmain].mustcomplete].complete) then
+							stop = true
+						end
+					end
 					
 					if not(stop) then
 						World.rituals.COMPLETE( kmain, i )
 						World.rituals.listeners[kmain].counter = World.rituals.listeners[kmain].counter + 1
+						f_values = {}
+						break
 					end
 				end
 			else
-				if i == #vmain and not(World.rituals.listeners.complete) then
+				if i == #vmain and not(World.rituals.listeners[kmain].complete) then
 					World.rituals.listeners[kmain].complete = true
 				end
 			end
@@ -139,29 +147,33 @@ function love.load()
 end
 
 function love.update( f_dt )
-	local logindex = 1
+	if not( World.winstate ) then
+		local logindex = 1
 
-	for i = 1, #Run do
-		Run[i]( f_dt, World, LOG )
-		logindex = logindex + 1
+		for i = 1, #Run do
+			Run[i]( f_dt, World, LOG )
+			logindex = logindex + 1
+		end
+		
+		World.keypress = false
+		World.mousepress = false
 	end
-	
-	World.keypress = false
-	World.mousepress = false
 end
 
 function love.draw()
-	for i = 1, #Draw do
-		Draw[i]( World, World.camera, Images )
-	end
-
-	if World.isdebug then
-		love.graphics.print( love.timer.getFPS(), 700, 2 )
-		
-		for i = 1, #GameLog do
-			love.graphics.print( GameLog[i][1] .. "         " .. tostring( GameLog[i][3] ), 700, (24 * i) )
+	if not( World.winstate ) then
+		for i = 1, #Draw do
+			Draw[i]( World, World.camera, Images )
 		end
 
-		GameLog = {}
+		if World.isdebug then
+			love.graphics.print( love.timer.getFPS(), 700, 2 )
+			
+			for i = 1, #GameLog do
+				love.graphics.print( GameLog[i][1] .. "         " .. tostring( GameLog[i][3] ), 700, (24 * i) )
+			end
+
+			GameLog = {}
+		end
 	end
 end

@@ -56,6 +56,20 @@ Container.run = function( f_dt, f_world, f_LOG )
 				end
 			else
 				Y.jumpgo = love.timer.getTime()
+
+				if f_world.rituals.listeners["test barrel weight limit integrity"].complete and not(f_world.rituals.listeners["test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"].complete)  then
+					f_world.rituals.currentritual = "test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"
+					print(1)
+				elseif f_world.rituals.listeners["test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"].complete and not( f_world.rituals.listeners["teST tEST TEST RIGHT"].complete ) then
+					f_world.rituals.currentritual = "teST tEST TEST RIGHT"
+				end
+				--[[elseif  f_world.rituals.listeners["teST tEST TEST RIGHT"].complete and not( f_world.rituals.listeners["TEST I-TEGRITY OF A-L S*DES BETW-EN TWO LS"].complete ) then
+					f_world.rituals.currentritual = "TEST I-TEGRITY OF A-L S*DES BETW-EN TWO LS"
+				elseif f_world.rituals.listeners["TEST I-TEGRITY OF A-L S*DES BETW-EN TWO LS"].complete and not( f_world.rituals.listeners["All diagnostics passed, please proceed to the recycling chute."].complete )  then
+					f_world.rituals.currentritual = "All diagnostics passed, please proceed to the recycling chute."
+				elseif f_world.rituals.listeners["All diagnostics passed, please proceed to the recycling chute."].complete then
+					f_world.winstate = true
+				end]]
 			end
 		end
 	elseif not(Player.collide.bottom) then

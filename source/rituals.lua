@@ -8,10 +8,28 @@ local RitualList = {
 		complete = false,
 		counter = 0
 	},
-	["test barrel weight limit integrity"] = { [1] = {name = "player is touching box top side", id = 99, complete = false},
+	["test barrel weight limit integrity"] = { [1] = {name = "player is touching box top side", id = 84, complete = false},
+						[2] = {name = "player is touching box top side", id = 83, mustcomplete = 1, complete = false},
 		complete = false,
 		counter = 0
+	},
+	["test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"] = { [1] = {name = "player is touching box top side", id = 83, complete = false},
+						[2] = {name = "player is touching box top side", id = 84, complete = false},
+						[3] = {name = "player is touching box top side", id = 84, complete = false},
+						[4] = {name = "player is touching box top side", id = 83, complete = false},
+		complete = false,
+		counter = 0,
+		mustcomplete = "test barrel weight limit integrity"
+	},
+	["teST tEST TEST RIGHT"] = { [1] = {name = "player is touching box top side", id = 84, complete = false},
+				[2] = {name = "player is touching box top side", id = 84, mustcomplete = 1, complete = false},
+				[3] = {name = "player is touching box top side", id = 84, mustcomplete = {1, 2}, complete = false},
+
+			complete = false,
+			counter = 0,
+			mustcomplete = "test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"
 	}
+
 }
 local RitualCompleted = {{} --[[ritual names go here]], {} --[[indexes go here]], {} --[[Timers go here]]}
 local COMPLETE = function( f_ritual, f_index )
