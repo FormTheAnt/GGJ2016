@@ -3,6 +3,7 @@ local Run = {}
 local Draw = {}
 local Close = {}
 local Images = {}
+local Animations = {}
 
 local GameLog = {}
 local GameLogFirsts = {}
@@ -91,8 +92,29 @@ function love.load()
 	for i = 1, #filesystem do
 		if string.find(filesystem[i], ".png") then
 			local name = string.sub(filesystem[i], 0, string.find(filesystem[i], ".png") - 1)
+			local image = love.graphics.newImage("images/" .. filesystem[i])
 			
-			Images[name] = love.graphics.newImage("images/" .. filesystem[i])
+			Images[name] = function() return image end
+		else
+			local animationfiles = love.filesystem.getDirectoryItems( "images/" .. filesystem[i] .. "/"  )
+			local frames = {}
+
+
+			for v = 1, #animationfiles do
+				local name = string.sub( animationfiles[i], 0, string.find( animationfiles[i], ".png" ) - 1 )
+
+				frames[#frames + 1] = love.graphics.newImage( "images/" .. filesystem[i] .. "/" .. animationfiles[v] )
+			end
+			
+			Animations[ filesystem[i] ] = {frame = 1, time = love.timer.getTime(), finished = #animationfiles, files = frames}
+			
+			Images[ filesystem[i] ] = function() 
+				if love.timer.getTime() >= Animations[ filesystem[i] ].time then
+					Animations[ filesystem[i] ].frame = Animations[ filesystem[i] ].frame < Animations[ filesystem[i] ].finished and Animations[ filesystem[i] ].frame + 1 or 1
+				end
+
+				return Animations[ filesystem[i] ].files[Animations[ filesystem[i] ].frame]
+			end
 		end
 	end
 	
