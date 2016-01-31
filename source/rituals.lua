@@ -66,9 +66,11 @@ end
 
 Container.draw = function( f_world, f_camera )
 	for i = 1, #RitualCompleted[1] do
-		love.graphics.setColor( 255, 255, 255, 255 - (255 * ((love.timer.getTime() - RitualCompleted[3][i]) / f_world.rituals.popuptime)) )
-		love.graphics.print( RitualCompleted[1][i], 500, 300 )
-		love.graphics.setColor( 255, 255, 255, 255 )
+		if RitualCompleted[3][i] then
+			love.graphics.setColor( 255, 255, 255, 255 - (255 * ((love.timer.getTime() - RitualCompleted[3][i]) / f_world.rituals.popuptime)) )
+			love.graphics.print( RitualCompleted[1][i], 500, 300 )
+			love.graphics.setColor( 255, 255, 255, 255 )
+		end
 	end
 end
 

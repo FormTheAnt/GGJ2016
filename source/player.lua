@@ -2,7 +2,7 @@ local Container = {}
 local X = {var = 0, speedlimit = 500, slowdown = 0}
 local Y = {var = 0, speedlimit = 500, slowdown = 0}
 
-Container.main = {x = 90, y = 90, width = 50, height = 100, xvars = X, yvars = Y, nextx = 90, nexty = 90, collide = {top = false, bottom = false, left = false, right = false}}
+Container.main = {firstx = 90, firsty = 90, x = 90, y = 90, width = 50, height = 100, xvars = X, yvars = Y, nextx = 90, nexty = 90, collide = {top = false, bottom = false, left = false, right = false}}
 
 local Player = Container.main
 
