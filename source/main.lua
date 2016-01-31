@@ -103,17 +103,19 @@ function love.load()
 				for v = 1, #animationfiles do
 					if string.find( animationfiles[v], ".png" ) then
 						local name = string.sub( animationfiles[v], 0, string.find( animationfiles[v], ".png" ) - 1 )
-
-						frames[#frames + 1] = love.graphics.newImage( "images/" .. filesystem[i] .. "/" .. animationfiles[v] )
+						
+						frames[tonumber(string.sub(animationfiles[v], string.find( animationfiles[v], "_" ) + 1, string.find(animationfiles[v], ".png" ) - 1 ) )] = love.graphics.newImage( "images/" .. filesystem[i] .. "/" .. animationfiles[v] )
 					end
 				end
 				
-				Animations[ filesystem[i] ] = {frame = 1, time = love.timer.getTime(), finished = #animationfiles, files = frames}
+				Animations[ filesystem[i] ] = {frame = 0, time = love.timer.getTime(), finished = #animationfiles, files = frames}
 				
 				Images[ filesystem[i] ] = function() 
 					if love.timer.getTime() >= Animations[ filesystem[i] ].time then
-						Animations[ filesystem[i] ].frame = Animations[ filesystem[i] ].frame < Animations[ filesystem[i] ].finished and Animations[ filesystem[i] ].frame + 1 or 1
+						Animations[ filesystem[i] ].frame = Animations[ filesystem[i] ].frame < Animations[ filesystem[i] ].finished and Animations[ filesystem[i] ].frame + 1 or 0
 					end
+
+					print( Animations[ filesystem[i] ].frame )
 
 					return Animations[ filesystem[i] ].files[Animations[ filesystem[i] ].frame]
 				end
