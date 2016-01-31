@@ -2,7 +2,7 @@ local Container = {}
 local X = {var = 0, speedlimit = 500, slowdown = 0}
 local Y = {var = 900, speedlimit = 500, slowdown = 0, jumptime = 0, jumppower = 0, jumpstop = true}
 
-Container.main = {firstx = 8000, firsty = 8000, x = 8000, y = 8000, width = 50, height = 100, xvars = X, yvars = Y, nextx = 8000, nexty = 8000, collide = {top = false, bottom = false, left = false, right = false, jumpunlock = false}}
+Container.main = {animationside = "right", firstx = 8000, firsty = 8000, x = 8000, y = 8000, width = 50, height = 100, xvars = X, yvars = Y, nextx = 8000, nexty = 8000, collide = {top = false, bottom = false, left = false, right = false, jumpunlock = false}}
 
 local Player = Container.main
 
@@ -57,16 +57,10 @@ Container.run = function( f_dt, f_world, f_LOG )
 			else
 				Y.jumpgo = love.timer.getTime()
 
-				if f_world.rituals.listeners["test barrel weight limit integrity"].complete and not(f_world.rituals.listeners["test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"].complete)  then
-					f_world.rituals.currentritual = "test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"
-					print(1)
-				elseif f_world.rituals.listeners["test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"].complete and not( f_world.rituals.listeners["teST tEST TEST RIGHT"].complete ) then
-					f_world.rituals.currentritual = "teST tEST TEST RIGHT"
-				end
-				--[[elseif  f_world.rituals.listeners["teST tEST TEST RIGHT"].complete and not( f_world.rituals.listeners["TEST I-TEGRITY OF A-L S*DES BETW-EN TWO LS"].complete ) then
-					f_world.rituals.currentritual = "TEST I-TEGRITY OF A-L S*DES BETW-EN TWO LS"
-				elseif f_world.rituals.listeners["TEST I-TEGRITY OF A-L S*DES BETW-EN TWO LS"].complete and not( f_world.rituals.listeners["All diagnostics passed, please proceed to the recycling chute."].complete )  then
-					f_world.rituals.currentritual = "All diagnostics passed, please proceed to the recycling chute."
+				--[[if f_world.rituals.listeners["test barrel weIght lIMit intEGRITy"].complete and not(f_world.rituals.listeners["test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"].complete)  then
+					f_world.rituals.currentritual = "TEST I-TEGRITY OF ALL S*DES BETW-EN TWO LS"
+				elseif f_world.rituals.listeners["test inTEGRITY of ALL SIDeS BeTWEEN TWO LS"].complete and not( f_world.rituals.listeners["All diagnostics passed, please proceed to the recycling chute."].complete )  then
+					f_world.rituals.currentritual = "All diagnostics passed, please PROCEED TO THE RECYCLING CHUTE."
 				elseif f_world.rituals.listeners["All diagnostics passed, please proceed to the recycling chute."].complete then
 					f_world.winstate = true
 				end]]
@@ -117,27 +111,37 @@ Container.run = function( f_dt, f_world, f_LOG )
 end
 
 Container.draw = function( f_world, f_camera, f_images )
+	if love.keyboard.isDown( "d" ) then
+		Player.animationside = "right"
+	elseif love.keyboard.isDown( "a" ) then
+		Player.animationside = "left"
+	end
+
 	if not(Y.jumpgo)then
 		if (X.var == 0 and Y.var < 50 and Y.jumpstop) then
-			love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26 )
+			if Player.animationside == "right" then
+				love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26 )
+			else
+				love.graphics.draw( f_images["robot_idle"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 185 )
+			end
 		elseif (X.var ~= 0 and Y.var < 50 and Y.jumpstop)  then
-			if X.var > 0 then
+			if Player.animationside == "right" then
 				love.graphics.draw( f_images["robot_walk"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26, 71 )
-			elseif X.var < 0 then
+			else
 				love.graphics.draw( f_images["robot_walk"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 260 )
 			end
 		else
-			if X.var >= 0 then
+			if Player.animationside == "right" then
 				love.graphics.draw( f_images["robot_fall"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26, 11 )
-			elseif X.var < 0 then
+			else
 				love.graphics.draw( f_images["robot_fall"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 200 )
 			end
 		end
 	elseif Y.jumpgo then
-		if love.keyboard.isDown( "a" ) then
-			love.graphics.draw( f_images["robot_jump"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 260)
+		if Player.animationside == "right" then
+			love.graphics.draw( f_images["robot_jump"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26 )
 		else
-			love.graphics.draw( f_images["robot_jump"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, 0.26, 0.26, 71)
+			love.graphics.draw( f_images["robot_jump"](), Player.x - f_camera.x, (Player.y - f_camera.y) - 9, 0, -0.26, 0.26, 260)
 		end
 	end
 	--love.graphics.rectangle( "fill", Player.x - f_camera.x, Player.y - f_camera.y, Player.width, Player.height  )

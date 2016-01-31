@@ -57,8 +57,7 @@ local LOG = function( f_text, f_id, f_values )
 					if not(stop) then
 						World.rituals.COMPLETE( kmain, i )
 						World.rituals.listeners[kmain].counter = World.rituals.listeners[kmain].counter + 1
-						f_values = {}
-						break
+						return
 					end
 				end
 			else

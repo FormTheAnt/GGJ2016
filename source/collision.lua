@@ -5,7 +5,7 @@ Container.main = {}
 local Boxes = Container.main
 local Editor = {mousecheck = false, mousex = false, mousey = false}
 local WriteReady = false
-local BoxTypeNames = {"normal", "barrel", "background"}
+local BoxTypeNames = {"normal", "barrel", "background", "crate"}
 local BoxType = "normal"
 
 local GateWayLocks = {ids = {}, states = {}, keys = {}}
@@ -132,13 +132,17 @@ Container.draw = function( f_world, f_camera, f_images )
 			elseif Boxes[level].type[i] == "background" then
 				for x = 0, math.floor(Boxes[level].width[i]/64) - 1 do
 					for y = 0, math.floor(Boxes[level].height[i]/64) - 1 do
-						love.graphics.draw( f_images["background1"](), (Boxes[level].x[i] - f_camera.x) + (x * 64), (Boxes[level].y[i] - f_camera.y) + (y * 64) )
+						love.graphics.draw( f_images["background"](), (Boxes[level].x[i] - f_camera.x) + (x * 64), (Boxes[level].y[i] - f_camera.y) + (y * 64) )
 					end
 				end
-			elseif Boxes[level].type[i] == "enemyspawn" then
-				love.graphics.setColor( 255, 55, 255 )
-				love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
-				love.graphics.setColor( 255, 255, 255 )
+			elseif Boxes[level].type[i] == "barrel" then
+				love.graphics.draw( f_images["barrel1"](), (Boxes[level].x[i] - f_camera.x), (Boxes[level].y[i] - f_camera.y) )
+			elseif Boxes[level].type[i] == "crate" then
+				for x = 0, math.floor(Boxes[level].width[i]/64) - 1 do
+					for y = 0, math.floor(Boxes[level].height[i]/64) - 1 do
+						love.graphics.draw( f_images["crate"](), (Boxes[level].x[i] - f_camera.x) + ((x * 60)), (Boxes[level].y[i] - f_camera.y) + (y * 60) )
+					end
+				end
 			end
 			
 		if f_world.isdebug then
