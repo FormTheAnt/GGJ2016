@@ -14,28 +14,32 @@ local DIST = function( f_x1, f_y1, f_x2, f_y2 )
 	return math.sqrt( ((f_x2 - f_x1)^2) + ((f_y2 - f_y1)^2) )
 end
 
-Container.run = function( f_dt, f_world )
+Container.run = function( f_dt, f_world, f_LOG )
 	local level = f_world.currentlevel
 	local player = f_world.player
 
 	for i = 1, #Boxes[level].x do
 		if Boxes[level].width[i] ~= 0 then
 			if (player.nextx + player.width) > Boxes[level].x[i] and player.x < (Boxes[level].x[i] + Boxes[level].width[i]) then
-				if (player.y + player.height) < Boxes[level].y[i] and (player.nexty + player.height) > Boxes[level].y[i] then
+				if math.floor(player.y + player.height) < Boxes[level].y[i] and math.ceil(player.nexty + player.height) > Boxes[level].y[i] then
 					f_world.player.nexty = (Boxes[level].y[i] - f_world.player.height) - 0.1
 					f_world.player.collide.bottom = true
-				elseif player.y > (Boxes[level].y[i] + Boxes[level].height[i]) and player.nexty < (Boxes[level].y[i] + Boxes[level].height[i]) then
+					f_LOG( "player is touching box top side", i )
+				elseif math.ceil(player.y) > (Boxes[level].y[i] + Boxes[level].height[i]) and math.floor(player.nexty) < (Boxes[level].y[i] + Boxes[level].height[i]) then
 					f_world.player.nexty = (Boxes[level].y[i] + Boxes[level].height[i]) + 0.1
 					f_world.player.collide.top = true
+					f_LOG( "player is touching box bottom side", i )
 				end
 			end
 			if (player.nexty + player.height) > Boxes[level].y[i] and player.nexty < (Boxes[level].y[i] + Boxes[level].height[i]) then
 				if (player.x + player.width) < Boxes[level].x[i] and (player.nextx + player.width) > Boxes[level].x[i] then
 					f_world.player.nextx = (Boxes[level].x[i] - f_world.player.width) - 0.1
 					f_world.player.collide.left = true
+					f_LOG( "player is touching box right side", i )
 				elseif player.x > (Boxes[level].x[i] + Boxes[level].width[i]) and player.nextx < (Boxes[level].x[i] + Boxes[level].width[i]) then
 					f_world.player.nextx = (Boxes[level].x[i] + Boxes[level].width[i]) + 0.1
 					f_world.player.collide.right = true
+					f_LOG( "player is touching box left side", i )
 				end
 			end
 		end
