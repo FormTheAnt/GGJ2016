@@ -89,9 +89,11 @@ function love.load()
 	local filesystem = love.filesystem.getDirectoryItems( "images" )
 
 	for i = 1, #filesystem do
-		local name = string.sub(filesystem[i], 0, string.find(filesystem[i], ".png") - 1)
-		
-		Images[name] = love.graphics.newImage("images/" .. filesystem[i])
+		if string.find(filesystem[i], ".png") then
+			local name = string.sub(filesystem[i], 0, string.find(filesystem[i], ".png") - 1)
+			
+			Images[name] = love.graphics.newImage("images/" .. filesystem[i])
+		end
 	end
 	
 	LOG( "game has started", 0 )
