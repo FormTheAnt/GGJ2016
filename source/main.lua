@@ -101,9 +101,11 @@ function love.load()
 				local frames = {}
 
 				for v = 1, #animationfiles do
-					local name = string.sub( animationfiles[v], 0, string.find( animationfiles[v], ".png" ) - 1 )
+					if string.find( animationfiles[i], ".png" ) then
+						local name = string.sub( animationfiles[v], 0, string.find( animationfiles[v], ".png" ) - 1 )
 
-					frames[#frames + 1] = love.graphics.newImage( "images/" .. filesystem[i] .. "/" .. animationfiles[v] )
+						frames[#frames + 1] = love.graphics.newImage( "images/" .. filesystem[i] .. "/" .. animationfiles[v] )
+					end
 				end
 				
 				Animations[ filesystem[i] ] = {frame = 1, time = love.timer.getTime(), finished = #animationfiles, files = frames}
