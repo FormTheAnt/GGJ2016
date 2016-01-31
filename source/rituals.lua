@@ -3,7 +3,9 @@ local Container = {}
 local RitualList = {
 	["is gravity still functioning?"] = { [1] = {name = "player is touching box top side", first = true, complete = false},
 						[2] = {name = "player is falling", mustcomplete = 1, complete = false},
-						[3] = {name = "player is touching box left side", mustcomplete = {1, 2}, complete = false}
+						[3] = {name = "player is falling", mustcomplete = {1, 2}, complete = false},
+						[4] = {name = "player is falling", mustcomplete = {1, 2, 3}, complete = false},
+						[5] = {name = "player is falling", mustcomplete = {1, 2, 3, 4}, complete = false}
 
 	}
 }
@@ -39,19 +41,6 @@ Container.run = function( f_dt, f_world )
 			end
 		end
 	}
-
-
-	--[[for k, v in pairs( RitualList ) do
-		for i = 1, #v do
-			if not( v[i].completed ) then
-				if speciallist[v[i].special]( k, i ) then
-					v[i].completed = true
-
-					COMPLETE( k, i )
-				end
-			end
-		end
-	end]]
 
 	for i = 1, #RitualCompleted[1] do
 		if RitualCompleted[3][i] then

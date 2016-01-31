@@ -1,6 +1,6 @@
 local Container = {}
 
-Container.main = {x = 0, y = 0, width = 0, height = 0, leftmargin = 500, rightmargin = 600, topmargin = 50, bottommargin = 200, xgoal = 0, ygoal = 0}
+Container.main = {x = 8000, y = 8000, width = 0, height = 0, leftmargin = 500, rightmargin = 600, topmargin = 50, bottommargin = 200, xgoal = 0, ygoal = 0}
 
 
 Container.run = function( f_dt, f_world )

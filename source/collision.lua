@@ -5,10 +5,12 @@ Container.main = {}
 local Boxes = Container.main
 local Editor = {mousecheck = false, mousex = false, mousey = false}
 local WriteReady = false
-local BoxTypeNames = {"normal", "hazard", "enemyspawn"}
+local BoxTypeNames = {"normal", "hazard", "enemyspawn", "gateway"}
 local BoxType = "normal"
 
-Boxes[1] = { x = {100}, y = {300}, width = {250}, height = {30}, type = {"normal"} }
+local GateWayLocks = {ids = {}, states = {}, keys = {}}
+
+Boxes[1] = { x = { 8000, 7872, 7872, 8320, 8448, 0, 0, 9536, 9664, 10240, 10368, 11328, 11072, 10752, 11072, 10944, 0, 11136, 10944, 11136, 10944, 10688, 10752 }, y = { 8128, 7936, 7872, 8128, 8832, 0, 0, 8832, 9920, 9920, 11520, 10752, 11328, 11200, 11008, 10816, 0, 10624, 10432, 10240, 10048, 9856, 11264 }, type = { 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal' }, height = { 64, 256, 64, 832, 128, 0, 0, 1216, 128, 1728, 128, 768, 64, 64, 64, 64, 0, 64, 64, 64, 64, 64, 64 }, width = { 320, 128, 448, 128, 1088, 0, 0, 128, 576, 128, 1088, 128, 192, 192, 256, 64, 0, 64, 64, 64, 64, 192, 64 } }
 
 local DIST = function( f_x1, f_y1, f_x2, f_y2 )
 	return math.sqrt( ((f_x2 - f_x1)^2) + ((f_y2 - f_y1)^2) )
@@ -22,27 +24,26 @@ Container.run = function( f_dt, f_world, f_LOG )
 		if Boxes[level].width[i] ~= 0 then
 			local overlap = false
 
-			if (player.nextx + player.width) > Boxes[level].x[i] and player.x < (Boxes[level].x[i] + Boxes[level].width[i]) then
-				if math.floor(player.y + player.height) < Boxes[level].y[i] and math.ceil(player.nexty + player.height) > Boxes[level].y[i] then
+			if (player.nextx + player.width) >= Boxes[level].x[i] and player.x <= (Boxes[level].x[i] + Boxes[level].width[i]) then
+				if (player.y + player.height) <= Boxes[level].y[i] and (player.nexty + player.height) >= Boxes[level].y[i] then
 					f_world.player.nexty = (Boxes[level].y[i] - f_world.player.height) - 0.1
 					f_world.player.collide.bottom = true
 					f_LOG( "player is touching box top side", i )
 					overlap = true
-				elseif math.ceil(player.y) > (Boxes[level].y[i] + Boxes[level].height[i]) and math.floor(player.nexty) < (Boxes[level].y[i] + Boxes[level].height[i]) then
+				elseif (player.y) >= (Boxes[level].y[i] + Boxes[level].height[i]) and (player.nexty) <= (Boxes[level].y[i] + Boxes[level].height[i]) then
 					f_world.player.nexty = (Boxes[level].y[i] + Boxes[level].height[i]) + 0.1
 					f_world.player.collide.top = true
 					f_LOG( "player is touching box bottom side", i )
 					overlap = true
 				end
-				
 			end
-			if (player.nexty + player.height) > Boxes[level].y[i] and player.nexty < (Boxes[level].y[i] + Boxes[level].height[i]) then
-				if (player.x + player.width) < Boxes[level].x[i] and (player.nextx + player.width) > Boxes[level].x[i] then
+			if (player.nexty + player.height) >= Boxes[level].y[i] and player.nexty <= (Boxes[level].y[i] + Boxes[level].height[i]) then
+				if (player.x + player.width) <= Boxes[level].x[i] and (player.nextx + player.width) >= Boxes[level].x[i] then
 					f_world.player.nextx = (Boxes[level].x[i] - f_world.player.width) - 0.1
 					f_world.player.collide.left = true
 					f_LOG( "player is touching box left side", i )
 					overlap = true
-				elseif player.x > (Boxes[level].x[i] + Boxes[level].width[i]) and player.nextx < (Boxes[level].x[i] + Boxes[level].width[i]) then
+				elseif player.x >= (Boxes[level].x[i] + Boxes[level].width[i]) and player.nextx <= (Boxes[level].x[i] + Boxes[level].width[i]) then
 					f_world.player.nextx = (Boxes[level].x[i] + Boxes[level].width[i]) + 0.1
 					f_world.player.collide.right = true
 					f_LOG( "player is touching box right side", i )
@@ -60,33 +61,28 @@ Container.run = function( f_dt, f_world, f_LOG )
 	if f_world.mousepress then
 		if Editor.mousecheck then
 			local camera = f_world.camera
-			local mx = (love.mouse.getX() + camera.x) - ((love.mouse.getX() + camera.x) % 8)
-			local my = (love.mouse.getY() + camera.y) - ((love.mouse.getY() + camera.y) % 8)
-			
-			if ((love.mouse.getX() + f_world.camera.x) - Editor.mousex) > 0 then
+			local mx = (love.mouse.getX() + camera.x) - ((love.mouse.getX() + camera.x) % 64)
+			local my = (love.mouse.getY() + camera.y) - ((love.mouse.getY() + camera.y) % 64)
+
+			if (my - Editor.mousey) > 0 and (mx - Editor.mousex) > 0 then
 				Boxes[level].x[#Boxes[level].x + 1] = Editor.mousex
-				Boxes[level].width[#Boxes[level].width + 1] = (mx + f_world.camera.x) - Editor.mousex
-			else
-				Boxes[level].x[#Boxes[level].x + 1] = Editor.mousex + ((mx + f_world.camera.x) - Editor.mousex)
-				Boxes[level].width[#Boxes[level].width + 1] = ((mx + f_world.camera.x) - Editor.mousex) * -1
-			end
-			if ((my + f_world.camera.y) - Editor.mousey) > 0 then
+				Boxes[level].width[#Boxes[level].width + 1] = mx - Editor.mousex
 				Boxes[level].y[#Boxes[level].y + 1] = Editor.mousey
-				Boxes[level].height[#Boxes[level].height + 1] = (my + f_world.camera.y) - Editor.mousey
+				Boxes[level].height[#Boxes[level].height + 1] = my - Editor.mousey
+				Boxes[level].type[#Boxes[level].type + 1] = BoxType
+				Editor.mousecheck = false
+				Editor.mousex = false
+				Editor.mousey = false
 			else
-				Boxes[level].y[#Boxes[level].y + 1] = Editor.mousey + ((my + f_world.camera.y) - Editor.mousey)
-				Boxes[level].height[#Boxes[level].height + 1] = ((my + f_world.camera.y) - Editor.mousey) * -1
+				Editor.mousecheck = false
+				Editor.mousex = false
+				Editor.mousey = false
 			end
-			
-			Boxes[level].type[#Boxes[level].type + 1] = BoxType
-			Editor.mousecheck = false
-			Editor.mousex = false
-			Editor.mousey = false
 		else
 			local snapalign = false
 			local camera = f_world.camera
-			local mx = (love.mouse.getX() + camera.x) - ((love.mouse.getX() + camera.x) % 8)
-			local my = (love.mouse.getY() + camera.y) - ((love.mouse.getY() + camera.y) % 8)
+			local mx = (love.mouse.getX() + camera.x) - ((love.mouse.getX() + camera.x) % 64)
+			local my = (love.mouse.getY() + camera.y) - ((love.mouse.getY() + camera.y) % 64)
 			local box = Boxes[level]
 			
 			if f_world.mousepress == "l" then
@@ -96,29 +92,8 @@ Container.run = function( f_dt, f_world, f_LOG )
 			end
 
 			for i = 1, #box.x do
-				if f_world.mousepress == "l" then
-					if DIST( mx, my, box.x[i], box.y[i] ) < 20 then
-						Editor.mousex = box.x[i]
-						Editor.mousey = box.y[i]
-						break
-					end
-					if DIST( mx, my, box.x[i] + box.width[i], box.y[i] ) < 20 then
-						Editor.mousex = box.x[i] + box.width[i]
-						Editor.mousey = box.y[i]
-						break
-					end
-					if DIST( mx, my, box.x[i], box.y[i] + box.height[i] ) < 20 then
-						Editor.mousex = box.x[i]
-						Editor.mousey = box.y[i] + box.height[i]
-						break
-					end
-					if DIST( mx, my, box.x[i] + box.width[i], box.y[i] + box.height[i] ) < 20 then
-						Editor.mousex = box.x[i] + box.width[i]
-						Editor.mousey = box.y[i] + box.height[i]
-						break
-					end
-				elseif f_world.mousepress == "r" then
-					if (mx >= box.x[i] and mx <= (box.x[i] + box.width[i])) and (my >= box.y[i] and my <= (box.y[i] + box.height[i])) then
+				if f_world.mousepress == "r" then
+					if (mx >= box.x[i] - 1 and mx <= (box.x[i] + box.width[i] + 1)) and (my >= box.y[i] and my <= (box.y[i] + box.height[i] + 1)) then
 						Boxes[level].x[i] = 0
 						Boxes[level].y[i] = 0
 						Boxes[level].width[i] = 0
@@ -142,19 +117,25 @@ Container.draw = function( f_world, f_camera )
 	local level = f_world.currentlevel
 
 	for i = 1, #Boxes[level].x do
-		if Boxes[level].type[i] == "normal" then
-		love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
-		love.graphics.setColor( 255, 0, 0 )
-		love.graphics.line( Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i], (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i] )
-		love.graphics.line( Boxes[level].x[i] - f_camera.x, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i], (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i],  Boxes[level].y[i] - f_camera.y)
-		love.graphics.setColor( 255, 255, 255 )
-		elseif Boxes[level].type[i] == "hazard" then
-			love.graphics.setColor( 255, 55, 55 )
-			love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
-			love.graphics.setColor( 255, 255, 255 )
-		elseif Boxes[level].type[i] == "enemyspawn" then
-			love.graphics.setColor( 255, 55, 255 )
-			love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
+		if f_world.isdebug then
+			if Boxes[level].type[i] == "normal" then
+				love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
+				love.graphics.setColor( 255, 0, 0 )
+				love.graphics.line( Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i], (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i] )
+				love.graphics.line( Boxes[level].x[i] - f_camera.x, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i], (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i],  Boxes[level].y[i] - f_camera.y)
+				love.graphics.setColor( 255, 255, 255 )
+			elseif Boxes[level].type[i] == "hazard" then
+				love.graphics.setColor( 255, 55, 55 )
+				love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
+				love.graphics.setColor( 255, 255, 255 )
+			elseif Boxes[level].type[i] == "enemyspawn" then
+				love.graphics.setColor( 255, 55, 255 )
+				love.graphics.rectangle( "fill", Boxes[level].x[i] - f_camera.x, Boxes[level].y[i] - f_camera.y, Boxes[level].width[i], Boxes[level].height[i] )
+				love.graphics.setColor( 255, 255, 255 )
+			end
+			
+			love.graphics.setColor( 55, 55, 55 )
+			love.graphics.print( tostring(i), (Boxes[level].x[i] - f_camera.x) + Boxes[level].width[i]/2, (Boxes[level].y[i] - f_camera.y) + Boxes[level].height[i]/2 )
 			love.graphics.setColor( 255, 255, 255 )
 		end
 	end
@@ -164,9 +145,10 @@ Container.draw = function( f_world, f_camera )
 		love.graphics.print( "(Press 1-8 to switch) Current block type: " .. BoxType, 15, 60 )
 		love.graphics.print( "(Press l to switch) Debug is currently: " .. tostring( f_world.isdebug ), 15, 90 )
 
+		love.graphics.rectangle( "fill", love.mouse.getX() - (love.mouse.getX() % 64), love.mouse.getY() - (love.mouse.getY() % 64), 5, 5 ) 
+		
 		if Editor.mousex then
-			love.graphics.rectangle( "fill", (love.mouse.getX() + f_camera.x) - (love.mouse.getX() % 8), (love.mouse.getY() + f_camera.y) - (love.mouse.getY() % 8), 5, 5 ) 
-			love.graphics.rectangle( "fill", Editor.mousex, Editor.mousey, ((love.mouse.getX() + f_camera.y) - (love.mouse.getX() % 8)) - Editor.mousex, ((love.mouse.getY() + f_camera.y) - (love.mouse.getY() % 8)) - Editor.mousey ) 
+			love.graphics.rectangle( "fill", Editor.mousex - f_camera.x, Editor.mousey - f_camera.y, ((love.mouse.getX() + f_camera.x) - ((love.mouse.getX() + f_camera.x) % 64)) - Editor.mousex, ((love.mouse.getY() + f_camera.y) - ((love.mouse.getY() + f_camera.y) % 64)) - Editor.mousey ) 
 		end
 	end
 end
