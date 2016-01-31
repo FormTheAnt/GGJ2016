@@ -108,14 +108,16 @@ function love.load()
 					end
 				end
 				
-				Animations[ filesystem[i] ] = {frame = 0, time = love.timer.getTime(), finished = #animationfiles - 1, files = frames}
+				Animations[ filesystem[i] ] = {frame = 0, time = love.timer.getTime(), files = frames}
 				
 				Images[ filesystem[i] ] = function() 
 					if love.timer.getTime() >= Animations[ filesystem[i] ].time then
-						Animations[ filesystem[i] ].frame = Animations[ filesystem[i] ].frame < Animations[ filesystem[i] ].finished and Animations[ filesystem[i] ].frame + 1 or 0
+						if Animations[ filesystem[i] ].files[Animations[ filesystem[i] ].frame + 1] then
+							Animations[ filesystem[i] ].frame = Animations[ filesystem[i] ].frame + 1
+						else
+							Animations[ filesystem[i] ].frame = 1
+						end
 					end
-
-					print( Animations[ filesystem[i] ].frame )
 
 					return Animations[ filesystem[i] ].files[Animations[ filesystem[i] ].frame]
 				end
