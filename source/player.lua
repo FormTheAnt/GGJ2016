@@ -57,13 +57,11 @@ Container.run = function( f_dt, f_world, f_LOG )
 			else
 				Y.jumpgo = love.timer.getTime()
 
-				--[[if f_world.rituals.listeners["test barrel weIght lIMit intEGRITy"].complete and not(f_world.rituals.listeners["test left weight, test right weigh-, test rig-t w-----, tesT l-*t ------"].complete)  then
-					f_world.rituals.currentritual = "TEST I-TEGRITY OF ALL S*DES BETW-EN TWO LS"
-				elseif f_world.rituals.listeners["test inTEGRITY of ALL SIDeS BeTWEEN TWO LS"].complete and not( f_world.rituals.listeners["All diagnostics passed, please proceed to the recycling chute."].complete )  then
-					f_world.rituals.currentritual = "All diagnostics passed, please PROCEED TO THE RECYCLING CHUTE."
-				elseif f_world.rituals.listeners["All diagnostics passed, please proceed to the recycling chute."].complete then
+				if f_world.rituals.listeners["test barrel weight limit integrity"].complete and not(f_world.rituals.listeners["test block with sides between two Ls"].complete) then
+					f_world.rituals.currentritual = "test block with sides between two Ls"
+				elseif f_world.rituals.listeners["test block with sides between two Ls"].complete then
 					f_world.winstate = true
-				end]]
+				end
 			end
 		end
 	elseif not(Player.collide.bottom) then
@@ -103,7 +101,6 @@ Container.run = function( f_dt, f_world, f_LOG )
 		Y.var = (Y.var / 2) * -1
 	end
 	
-
 	Player.nextx = math.floor( (Player.x + (X.var * f_dt)) * 100 ) / 100
 	Player.nexty = math.floor( (Player.y + (Y.var * f_dt)) * 100 ) / 100
 

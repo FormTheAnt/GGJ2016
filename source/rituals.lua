@@ -8,9 +8,17 @@ local RitualList = {
 		complete = false,
 		counter = 0
 	},
-	["test barrel weight limit integrity"] = { [1] = {name = "player is touching box top side", id = 84, complete = false},
-						[2] = {name = "player is touching box top side", id = 83, mustcomplete = 1, complete = false},
+	["test barrel weight limit integrity"] = { [1] = {name = "player is touching box top side", id = 187, complete = false},
+						[2] = {name = "player is touching box top side", id = 188, complete = false},
 		complete = false,
+		counter = 0
+	},
+	["test block with sides between two Ls"] = { [1] = {name = "player is touching box top side", id = 50, complete = false},
+						[2] = {name = "player is touching box left side", id = 50, complete = false},
+						[3] = {name = "player is touching box right side", id = 50, complete = false},
+						[4] = {name = "player is touching box bottom side", id = 50, complete = false},
+		complete = false,
+		mustcomplete = "test barrel weight limit integrity",
 		counter = 0
 	}
 

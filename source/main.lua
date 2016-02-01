@@ -8,7 +8,7 @@ local Music = {}
 
 local GameLog = {}
 local GameLogFirsts = {}
-local World = {currentlevel = 1, camera = Camera, isdebug = true, log = GameLog, logfirsts = GameLogFirsts, winstate = false}
+local World = {currentlevel = 1, camera = Camera, isdebug = false, log = GameLog, logfirsts = GameLogFirsts, winstate = false, startstate = true}
 local LOG = function( f_text, f_id, f_values )
 	local f_values = f_values or {}
 
@@ -79,7 +79,7 @@ function love.keypressed( f_key, f_isrepeat )
 		love.event.push( "quit" )
 	else
 		if f_key == "l" then
-			World.isdebug = not(World.isdebug)			
+			--World.isdebug = not(World.isdebug)			
 		end
 
 		World.keypress = f_key
@@ -149,43 +149,60 @@ function love.load()
 end
 
 function love.update( f_dt )
-	Music:play()
+	if not( World.startstate ) then
+		if not( World.winstate ) then
+			Music:play()
 
-	if not( World.winstate ) then
-		local logindex = 1
+			local logindex = 1
 
-		for i = 1, #Run do
-			Run[i]( f_dt, World, LOG )
-			logindex = logindex + 1
+			for i = 1, #Run do
+				Run[i]( f_dt, World, LOG )
+				logindex = logindex + 1
+			end
+			
 		end
-		
-		World.keypress = false
-		World.mousepress = false
+	else
+		if World.mousepress then
+			if love.mouse.getX() > 690 and love.mouse.getY() > 310 and love.mouse.getX() < 890 and love.mouse.getY() < 440 then
+				World.startstate = false
+			end
+			if love.mouse.getX() > 690 and love.mouse.getY() > 450 and love.mouse.getX() < 890 and love.mouse.getY() < 540 then
+				love.event.push( "quit" )
+			end
+			
+		end
 	end
+	
+	World.keypress = false
+	World.mousepress = false
 end
 
 local Credits = {titles = {"Programming by Orion Hubert", "Art by Sophia Baldonado", "Music by J. Shagam"}, variables = {150, 300, 450}}
 
 function love.draw()
-	if not( World.winstate ) then
-		for i = 1, #Draw do
-			Draw[i]( World, World.camera, Images )
-		end
-
-		if World.isdebug then
-			love.graphics.print( love.timer.getFPS(), 700, 2 )
-			
-			for i = 1, #GameLog do
-				love.graphics.print( GameLog[i][1] .. "         " .. tostring( GameLog[i][3] ), 700, (24 * i) )
+	if not( World.startstate ) then
+		if not( World.winstate ) then
+			for i = 1, #Draw do
+				Draw[i]( World, World.camera, Images )
 			end
 
-			GameLog = {}
+			if World.isdebug then
+				love.graphics.print( love.timer.getFPS(), 700, 2 )
+				
+				for i = 1, #GameLog do
+					love.graphics.print( GameLog[i][1] .. "         " .. tostring( GameLog[i][3] ), 700, (24 * i) )
+				end
+
+				GameLog = {}
+			end
+		else
+			love.graphics.print( "You helped R0R fulfill its primary objective: disassembing itself to produce parts for paperclips. Great work!", 100, 50 )
+			
+			for i = 1, #Credits.titles do
+				love.graphics.print( Credits.titles[i], 650, Credits.variables[i] )
+			end
 		end
 	else
-		love.graphics.print( "You helped R0R fulfill its primary directive: disassembing itself to produce parts for paperclips. Great work!", 100, 50 )
-		
-		for i = 1, #Credits.titles do
-			love.graphics.print( Credits.titles[i], 650, Credits.variables[i] )
-		end
+		love.graphics.draw( Images[ "title" ](), 0, 0 )
 	end
 end

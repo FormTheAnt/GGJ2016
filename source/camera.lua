@@ -1,6 +1,6 @@
 local Container = {}
 
-Container.main = {x = 8000, y = 8000, width = 0, height = 0, leftmargin = 500, rightmargin = 600, topmargin = 50, bottommargin = 200, xgoal = 0, ygoal = 0}
+Container.main = {x = 7500, y = 7000, width = 0, height = 0, leftmargin = 500, rightmargin = 700, topmargin = 150, bottommargin = 300, xgoal = 0, ygoal = 0}
 
 
 Container.run = function( f_dt, f_world )
@@ -19,21 +19,22 @@ Container.run = function( f_dt, f_world )
 			camera.y = camera.y + (1000 * f_dt)
 		end
 	else
-		if ((player.x + player.width) - camera.x) > camera.rightmargin then
-			camera.x = camera.x + (100 * f_dt)
+		--[[if ((player.x + player.width) - camera.x) > camera.rightmargin then
 		elseif (player.x - camera.x) < camera.leftmargin then
-			camera.x = camera.x - (100 * f_dt)
+			camera.x = camera.x + (camera.x - ((player.x + player.width)))
 		end
 		if ((player.y + player.height) - camera.y) > camera.bottommargin then
-			camera.y = camera.y + (100 * f_dt)
+			camera.y = camera.y + (((player.y + player.height) - camera.y))
 		elseif (player.y - camera.y) < camera.topmargin then
-			camera.y = camera.y - (100 * f_dt)
-		end
+			camera.y = camera.y + (camera.y - ((player.y + player.height) - camera.y))
+		end]]
 	end
+
+	camera.x = camera.x + ((player.x + player.width) - (camera.x + 500)) 
+	camera.y = camera.y + ((player.y + player.height) - (camera.y + 500))
 end
 
-Container.draw = function()
-
+Container.draw = function(f_world, f_camera)
 end
 
 
