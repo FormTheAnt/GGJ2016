@@ -4,10 +4,11 @@ local Draw = {}
 local Close = {}
 local Images = {}
 local Animations = {}
+local Music = {}
 
 local GameLog = {}
 local GameLogFirsts = {}
-local World = {currentlevel = 1, camera = Camera, isdebug = true, log = GameLog, logfirsts = GameLogFirsts}
+local World = {currentlevel = 1, camera = Camera, isdebug = true, log = GameLog, logfirsts = GameLogFirsts, winstate = false}
 local LOG = function( f_text, f_id, f_values )
 	local f_values = f_values or {}
 
@@ -141,11 +142,15 @@ function love.load()
 			end
 		end
 	end
+
+	Music = love.audio.newSource( "sounds/r0r.ogg" )
 	
 	LOG( "game has started", 0 )
 end
 
 function love.update( f_dt )
+	Music:play()
+
 	if not( World.winstate ) then
 		local logindex = 1
 
@@ -158,6 +163,8 @@ function love.update( f_dt )
 		World.mousepress = false
 	end
 end
+
+local Credits = {titles = {"Programming by Orion Hubert", "Art by Sophia Baldonado", "Music by J. Shagam"}, variables = {150, 300, 450}}
 
 function love.draw()
 	if not( World.winstate ) then
@@ -173,6 +180,12 @@ function love.draw()
 			end
 
 			GameLog = {}
+		end
+	else
+		love.graphics.print( "You helped R0R fulfill its primary directive: disassembing itself to produce parts for paperclips. Great work!", 100, 50 )
+		
+		for i = 1, #Credits.titles do
+			love.graphics.print( Credits.titles[i], 650, Credits.variables[i] )
 		end
 	end
 end
